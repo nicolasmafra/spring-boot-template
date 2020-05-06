@@ -1,16 +1,19 @@
 package com.nickmafra.demo.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.time.LocalDate;
 
 @Data
-@RequiredArgsConstructor
-@AllArgsConstructor
+@Entity
 public class Usuario {
 
+    @GeneratedValue
+    @Id
+    private Long id;
     private String nome;
     private String sobrenome;
     private LocalDate dataNascimento;
