@@ -1,8 +1,11 @@
 package com.nickmafra.demo.controller;
 
+import com.nickmafra.demo.dto.ConsultaDto;
+import com.nickmafra.demo.dto.PaginaDto;
 import com.nickmafra.demo.model.Usuario;
 import com.nickmafra.demo.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,8 +19,8 @@ public class UsuarioController {
     private UsuarioRepository repository;
 
     @GetMapping
-    public List<Usuario> getAll() {
-        return repository.findAll();
+    public PaginaDto<Usuario> getAll(ConsultaDto consulta) {
+        return new PaginaDto<>(repository.findAll(consulta.toPageable()));
     }
 
     @GetMapping("/{id}")
