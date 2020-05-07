@@ -16,6 +16,7 @@ public class UsuarioDto {
     private String nome;
     private String sobrenome;
     private LocalDate dataNascimento;
+    private String login;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String senha;
 
@@ -24,6 +25,7 @@ public class UsuarioDto {
         nome = usuario.getNome();
         sobrenome = usuario.getSobrenome();
         dataNascimento = usuario.getDataNascimento();
+        login = usuario.getLogin();
     }
 
     /**
@@ -48,5 +50,6 @@ public class UsuarioDto {
         usuario.setNome(nome);
         usuario.setSobrenome(sobrenome);
         usuario.setDataNascimento(dataNascimento);
+        usuario.setLogin(login);
     }
 }

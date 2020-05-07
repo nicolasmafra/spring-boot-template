@@ -1,7 +1,8 @@
-package com.nickmafra.demo.advice;
+package com.nickmafra.demo.infra.advice;
 
 import com.nickmafra.demo.dto.ErroDto;
-import com.nickmafra.demo.exception.BadRequestException;
+import com.nickmafra.demo.infra.exception.BadRequestException;
+import com.nickmafra.demo.infra.exception.JaCadastradoException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,13 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler({ HttpMessageNotReadableException.class })
     public ResponseEntity<ErroDto> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         return handleBadRequestException(new BadRequestException(BadRequestException.MSG_GENERICA, e));
+    }
+
+    @ExceptionHandler({ JaCadastradoException.class })
+    public ResponseEntity<ErroDto> handleJaCadastradoException(JaCadastradoException e) {
+        ErroDto dto = new ErroDto(e);
+        log.debug(dto.getMensagem());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(dto);
     }
 
 }

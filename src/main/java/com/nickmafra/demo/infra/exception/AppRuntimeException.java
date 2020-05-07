@@ -1,4 +1,4 @@
-package com.nickmafra.demo.exception;
+package com.nickmafra.demo.infra.exception;
 
 public class AppRuntimeException extends RuntimeException {
 

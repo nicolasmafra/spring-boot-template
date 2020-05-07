@@ -1,7 +1,7 @@
 package com.nickmafra.demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.nickmafra.demo.exception.AppRuntimeException;
+import com.nickmafra.demo.infra.exception.AppRuntimeException;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
