@@ -17,4 +17,5 @@ public class Usuario {
     private String nome;
     private String sobrenome;
     private LocalDate dataNascimento;
+    private String senha;
 }
