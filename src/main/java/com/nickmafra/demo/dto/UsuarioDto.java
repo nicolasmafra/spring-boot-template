@@ -5,6 +5,7 @@ import com.nickmafra.demo.model.Usuario;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 @Data
@@ -13,6 +14,7 @@ public class UsuarioDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
+    @NotEmpty
     private String nome;
     private String sobrenome;
     private LocalDate dataNascimento;
@@ -37,6 +39,7 @@ public class UsuarioDto {
         Usuario usuario = new Usuario();
         atualizarUsuario(usuario);
         // campos não diretamente atualizáveis
+        usuario.setLogin(login);
         usuario.setSenha(senha);
         return usuario;
     }
@@ -50,6 +53,5 @@ public class UsuarioDto {
         usuario.setNome(nome);
         usuario.setSobrenome(sobrenome);
         usuario.setDataNascimento(dataNascimento);
-        usuario.setLogin(login);
     }
 }
