@@ -3,7 +3,6 @@ package com.nickmafra.demo.service;
 import com.nickmafra.demo.infra.exception.AppRuntimeException;
 import com.nickmafra.demo.infra.exception.BadRequestException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -55,7 +54,7 @@ public class CriptoService {
     }
 
     public String ofuscarSenha(String senha) {
-        if (StringUtils.isEmpty(senha)) {
+        if (senha.isEmpty()) {
             throw new AppRuntimeException("Não é possível ofuscar senha vazia.");
         }
         byte[] salt = randomBytes(SALT_LENGTH);
@@ -64,12 +63,18 @@ public class CriptoService {
     }
 
     public boolean conferirSenhaOfuscada(String senha, String hash) {
-        if (StringUtils.isEmpty(senha)) {
+        if (senha.isEmpty()) {
             return false;
         }
-        String[] slices = hash.split(":");
-        byte[] salt = fromBase64(slices[0]);
-        byte[] encoded = fromBase64(slices[1]);
+        byte[] salt;
+        byte[] encoded;
+        try {
+            String[] slices = hash.split(":");
+            salt = fromBase64(slices[0]);
+            encoded = fromBase64(slices[1]);
+        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+            throw new AppRuntimeException("Hash inválido.");
+        }
         byte[] check = encodeChars(senha.toCharArray(), salt);
         return Arrays.equals(encoded, check);
     }

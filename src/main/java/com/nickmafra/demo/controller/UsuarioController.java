@@ -38,7 +38,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public Boolean testarLogin(LoginDto loginDto) {
+    public Boolean testarLogin(@Valid @RequestBody LoginDto loginDto) {
         return usuarioService.verificarLoginSenha(loginDto);
     }
 }
