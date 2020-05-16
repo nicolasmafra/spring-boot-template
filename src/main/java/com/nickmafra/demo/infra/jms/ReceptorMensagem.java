@@ -1,6 +1,6 @@
 package com.nickmafra.demo.infra.jms;
 
-import com.nickmafra.demo.dto.MensagemDto;
+import com.nickmafra.demo.infra.jms.dto.MensagemJmsDto;
 import com.nickmafra.demo.service.MensagemService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +15,10 @@ public class ReceptorMensagem {
     private MensagemService mensagemService;
 
     @JmsListener(destination = JmsConstants.DESTINATION)
-    public void receberMensagem(String stringMensagem) throws InterruptedException {
-        MensagemDto mensagem = MensagemDto.deserializar(stringMensagem);
-        log.info("Recebendo mensagem com título: {}", mensagem.getTitulo());
+    public void receberMensagem(MensagemJmsDto dto) throws InterruptedException {
+        log.info("Recebendo mensagem JMS com título: {}", dto.getTitulo());
         log.debug("Simulando processamento demorado");
         Thread.sleep(10000);
-        log.debug("Salvando mensagem.");
-        mensagemService.salvar(mensagem);
+        mensagemService.salvar(dto.toMensagem());
     }
 }
