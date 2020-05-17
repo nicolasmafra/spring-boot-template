@@ -1,19 +1,15 @@
 package com.nickmafra.demo.service;
 
-import com.nickmafra.demo.dto.ConsultaDto;
-import com.nickmafra.demo.dto.LoginDto;
-import com.nickmafra.demo.dto.PaginaDto;
-import com.nickmafra.demo.dto.UsuarioDto;
+import com.nickmafra.demo.dto.request.UsuarioCreateRequest;
+import com.nickmafra.demo.dto.request.UsuarioUpdateRequest;
 import com.nickmafra.demo.infra.exception.BadRequestException;
 import com.nickmafra.demo.infra.exception.JaCadastradoException;
 import com.nickmafra.demo.model.Usuario;
 import com.nickmafra.demo.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
-import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -23,45 +19,43 @@ public class UsuarioService {
     @Autowired
     private CriptoService criptoService;
 
-    public PaginaDto<UsuarioDto> listar(ConsultaDto consulta) {
-        Page<Usuario> pageUsuarios = repository.findAll(consulta.toPageable());
-        return new PaginaDto<>(pageUsuarios).map(UsuarioDto::new);
+    public Page<Usuario> listar(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
-    public UsuarioDto encontrar(Long id) {
-        Optional<Usuario> optUsuario = repository.findById(id);
-        return optUsuario
-                .map(UsuarioDto::new)
+    public Usuario encontrar(Long id) {
+        return repository.findById(id)
                 .orElseThrow(() -> new BadRequestException(BadRequestException.MSG_ID_NAO_ENCONTRADO));
     }
 
-    public void validarNovoUsuario(UsuarioDto usuarioDto) {
-        if (StringUtils.isEmpty(usuarioDto.getLogin()) || StringUtils.isEmpty(usuarioDto.getSenha())) {
-            throw new JaCadastradoException("Login e senha devem são obrigatórios.");
-        }
-        if (repository.existsByLogin(usuarioDto.getLogin())) {
+    public void validarUsuarioNovo(UsuarioCreateRequest request) {
+        if (repository.existsByLogin(request.getLogin())) {
             throw new JaCadastradoException("Login já cadastrado.");
         }
-        criptoService.validarForcaSenha(usuarioDto.getSenha());
     }
 
-    public Long criar(UsuarioDto usuarioDto) {
-        validarNovoUsuario(usuarioDto);
-        Usuario usuario = usuarioDto.toUsuario();
-        usuario.setSenha(criptoService.ofuscarSenha(usuario.getSenha()));
+    public void validarUsuarioExistente(Usuario usuario, UsuarioUpdateRequest request) {
+        // nada por enquanto
+    }
+
+    public Long criar(UsuarioCreateRequest request) {
+        validarUsuarioNovo(request);
+        Usuario usuario = request.atualizarCampos(new Usuario());
+        usuario.setHashSenha(criptoService.ofuscarSenha(usuario.getSenha()));
+        usuario.setSenha(null); // por segurança
         return repository.save(usuario).getId();
     }
 
-    public void atualizar(Long id, UsuarioDto usuarioDto) {
-        Usuario usuario = repository.findById(id)
-                .orElseThrow(() -> new BadRequestException(BadRequestException.MSG_ID_NAO_ENCONTRADO));
-        usuarioDto.atualizarUsuario(usuario);
+    public void atualizar(Long id, UsuarioUpdateRequest request) {
+        Usuario usuario = encontrar(id);
+        validarUsuarioExistente(usuario, request);
+        request.atualizarCampos(usuario);
         repository.save(usuario);
     }
 
-    public Boolean verificarLoginSenha(LoginDto loginDto) {
-        return repository.findByLogin(loginDto.getLogin())
-                .filter(usuario -> criptoService.conferirSenhaOfuscada(loginDto.getSenha(), usuario.getSenha()))
+    public Boolean verificarLoginSenha(String login, String senha) {
+        return repository.findByLogin(login)
+                .filter(usuario -> criptoService.conferirSenhaOfuscada(senha, usuario.getHashSenha()))
                 .isPresent();
     }
 }

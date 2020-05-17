@@ -1,7 +1,6 @@
 package com.nickmafra.demo.service;
 
 import com.nickmafra.demo.infra.exception.AppRuntimeException;
-import com.nickmafra.demo.infra.exception.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKeyFactory;
@@ -39,8 +38,8 @@ public class CriptoService {
         }
     }
 
-    private byte[] randomBytes(int length) {
-        byte[] bytes = new byte[length];
+    private byte[] newSalt() {
+        byte[] bytes = new byte[SALT_LENGTH];
         secureRandom.nextBytes(bytes);
         return bytes;
     }
@@ -57,7 +56,7 @@ public class CriptoService {
         if (senha.isEmpty()) {
             throw new AppRuntimeException("Não é possível ofuscar senha vazia.");
         }
-        byte[] salt = randomBytes(SALT_LENGTH);
+        byte[] salt = newSalt();
         byte[] encoded = encodeChars(senha.toCharArray(), salt);
         return toBase64(salt) + ":" + toBase64(encoded);
     }
@@ -77,18 +76,5 @@ public class CriptoService {
         }
         byte[] check = encodeChars(senha.toCharArray(), salt);
         return Arrays.equals(encoded, check);
-    }
-
-    public void validarForcaSenha(String senha) {
-        if (senha.length() < 8) {
-            throw new BadRequestException(BadRequestException.MSG_SENHA_CURTA);
-        }
-        boolean senhaFraca = senha.matches("[^A-Z]*") // não possui letras maiúsculas
-                || senha.matches("[^a-z]*") // não possui letras minúsculas
-                || senha.matches("[^0-9]*") // não possui números
-                || senha.matches("[a-zA-Z0-9]*"); // possui apenas letras e números
-        if (senhaFraca) {
-            throw new BadRequestException(BadRequestException.MSG_SENHA_FRACA);
-        }
     }
 }

@@ -1,6 +1,7 @@
 package com.nickmafra.demo.infra.advice;
 
 import com.nickmafra.demo.dto.ErroDto;
+import com.nickmafra.demo.infra.exception.AppRuntimeException;
 import com.nickmafra.demo.infra.exception.BadRequestException;
 import com.nickmafra.demo.infra.exception.JaCadastradoException;
 import lombok.extern.slf4j.Slf4j;
@@ -23,14 +24,14 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErroDto> handleException(Exception e) {
         ErroDto dto = new ErroDto(e);
-        log.error(dto.getMensagem(), e);
+        log.error(AppRuntimeException.MSG_ERRO_INTERNO, e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(dto);
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErroDto> handleBadRequestException(Exception e) {
         ErroDto dto = new ErroDto(e);
-        log.debug(dto.getMensagem(), e);
+        log.debug(BadRequestException.MSG_GENERICA, e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dto);
     }
 
