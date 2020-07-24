@@ -3,6 +3,7 @@ package com.nickmafra.demo.validation;
 import com.nickmafra.demo.validation.annotation.SenhaForte;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -12,27 +13,26 @@ import java.util.stream.Collectors;
 public class SenhaForteValidator implements ConstraintValidator<SenhaForte, String> {
 
     @Getter
+    @RequiredArgsConstructor
     @AllArgsConstructor
-    private static class ItemValidacao {
+    public enum ItemValidacao {
+        TAMANHO8(".{8,}", "{senha.forte.regras.tamanho8}"),
+        MAIUSCULA(".*[A-Z].*", "{senha.forte.regras.maiuscula}"),
+        MINUSCULA(".*[a-z].*", "{senha.forte.regras.minuscula}"),
+        DIGITO(".*[0-9].*", "{senha.forte.regras.digito}"),
+        CHAR_ESPECIAL(".*[^A-Za-z0-9].*", "{senha.forte.regras.char-especial}"),
+        NAO_BRANCOS("[^\\s]*", "{senha.forte.regras.nao.branco}");
+
         String regex;
         String mensagem;
     }
-
-    private static final ItemValidacao[] ITENS = {
-            new ItemValidacao(".{8,}", "{senha.forte.regras.tamanho8}"),
-            new ItemValidacao(".*[A-Z].*", "{senha.forte.regras.maiuscula}"),
-            new ItemValidacao(".*[a-z].*", "{senha.forte.regras.minuscula}"),
-            new ItemValidacao(".*[0-9].*", "{senha.forte.regras.digito}"),
-            new ItemValidacao(".*[^A-Za-z0-9].*", "{senha.forte.regras.char-especial}"),
-            new ItemValidacao("[^\\s]*", "{senha.forte.regras.nao.branco}"),
-    };
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) {
             return true; // não valida neste caso
         }
-        String textoItens = Arrays.stream(ITENS)
+        String textoItens = Arrays.stream(ItemValidacao.values())
                 .filter(item -> !value.matches(item.getRegex()))
                 .map(ItemValidacao::getMensagem)
                 .collect(Collectors.joining(", "));
