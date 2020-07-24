@@ -19,13 +19,6 @@ import java.util.List;
 @EnableSwagger2
 public class SwaggerConfig {
 
-    protected static final String[] SWAGGER_PATTERNS = {
-            "/swagger-ui.html",
-            "/webjars/springfox-swagger-ui/**",
-            "/swagger-resources/**",
-            "/v2/api-docs/**"
-    };
-
     private static final String AUTH_NAME = "Token";
     private static final AuthorizationScope[] AUTH_SCOPE_NONE = {};
 
