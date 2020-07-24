@@ -42,8 +42,4 @@ public class UsuarioController {
         usuarioService.atualizar(id, request);
     }
 
-    @PostMapping("/login")
-    public Boolean testarLogin(@Valid @RequestBody LoginDto loginDto) {
-        return usuarioService.verificarLoginSenha(loginDto.getLogin(), loginDto.getSenha());
-    }
 }
