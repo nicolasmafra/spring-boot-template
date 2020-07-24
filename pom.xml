@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.nickmafra.demo</groupId>
-	<artifactId>projeto-modelo</artifactId>
+	<artifactId>spring-boot-template</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>projeto-modelo</name>
-	<description>Projeto modelo usando Spring Boot</description>
+	<name>spring-boot-template</name>
+	<description>Projeto template usando Spring Boot</description>
 
 	<properties>
 		<java.version>1.8</java.version>
