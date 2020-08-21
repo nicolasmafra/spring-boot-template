@@ -9,8 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Slf4j
 @Service
 public class MensagemService {
@@ -19,19 +17,21 @@ public class MensagemService {
     private MensagemRepository mensagemRepository;
     @Autowired
     private EnviadorFila enviadorFila;
+    @Autowired
+    private DateService dateService;
 
     public Page<Mensagem> listar(Pageable pageable) {
         return mensagemRepository.findAll(pageable);
     }
 
     public void enviar(Mensagem mensagem) {
-        mensagem.setDataEnvio(LocalDateTime.now());
+        mensagem.setDataEnvio(dateService.agora());
         enviadorFila.enviarMensagem(mensagem);
     }
 
     public void salvar(Mensagem mensagem) {
         log.debug("Salvando mensagem.");
-        mensagem.setDataRecebimento(LocalDateTime.now());
+        mensagem.setDataRecebimento(dateService.agora());
         mensagemRepository.save(mensagem);
     }
 }
