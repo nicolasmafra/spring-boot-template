@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UsuarioService {
 
@@ -53,9 +55,8 @@ public class UsuarioService {
         repository.save(usuario);
     }
 
-    public Boolean verificarLoginSenha(String login, String senha) {
+    public Optional<Usuario> buscarPorLoginSenha(String login, String senha) {
         return repository.findByLogin(login)
-                .filter(usuario -> criptoService.conferirSenhaOfuscada(senha, usuario.getHashSenha()))
-                .isPresent();
+                .filter(usuario -> criptoService.conferirSenhaOfuscada(senha, usuario.getHashSenha()));
     }
 }

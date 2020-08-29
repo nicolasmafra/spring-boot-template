@@ -1,17 +1,20 @@
 package com.nickmafra.demo.service;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.nickmafra.demo.infra.exception.TokenExpiradoException;
+import com.nickmafra.demo.infra.exception.TokenInvalidoException;
+import com.nickmafra.demo.infra.security.AppAuthority;
+import com.nickmafra.demo.infra.security.JwtUserDetails;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @Slf4j
 @SpringBootTest
@@ -24,43 +27,47 @@ class JwtServiceTest {
     DateServiceImplMock dateServiceImplMock;
 
     @Test
-    void gerarLerToken() {
-        long id = 31;
+    void gerarLerToken() throws TokenInvalidoException, TokenExpiradoException {
+        JwtUserDetails jwtUserDetails = new JwtUserDetails(31, Collections.singletonList(AppAuthority.MASTER));
+        dateServiceImplMock.setAgora(null);
 
-        String token = jwtService.gerarToken(id);
+        String token = jwtService.gerarToken(jwtUserDetails);
         log.debug("Token JWT: {}", token);
-        long idLido = jwtService.lerToken(token);
+        JwtUserDetails jwtUserDetailsLido = jwtService.lerToken(token);
 
-        assertThat(idLido).isEqualTo(id);
+        assertThat(jwtUserDetails).isEqualTo(jwtUserDetailsLido);
     }
 
     @Test
-    void naoExpirado() {
-        long id = 37;
+    void naoExpirado() throws TokenInvalidoException, TokenExpiradoException {
+        JwtUserDetails jwtUserDetails = new JwtUserDetails(37, Collections.singletonList(AppAuthority.MASTER));
+
         // expira em 15 minutos
-        ZonedDateTime data1 = ZonedDateTime.of(2020, 8, 21, 14, 45, 0, 0, ZoneOffset.UTC);
-        ZonedDateTime data2 = ZonedDateTime.of(2020, 8, 21, 14, 59, 59, 0, ZoneOffset.UTC);
+        LocalDateTime data1 = LocalDateTime.of(2020, 8, 21, 14, 45, 0, 0);
+        LocalDateTime data2 = LocalDateTime.of(2020, 8, 21, 14, 59, 59, 0);
 
-        dateServiceImplMock.zonedDateTime = data1;
-        String token = jwtService.gerarToken(id);
+        dateServiceImplMock.setAgora(data1);
+        String token = jwtService.gerarToken(jwtUserDetails);
 
-        dateServiceImplMock.zonedDateTime = data2;
-        long idLido = jwtService.lerToken(token);
+        dateServiceImplMock.setAgora(data2);
+        JwtUserDetails jwtUserDetailsLido = jwtService.lerToken(token);
 
-        assertThat(idLido).isEqualTo(id);
+        assertThat(jwtUserDetails).isEqualTo(jwtUserDetailsLido);
     }
 
     @Test
     void expirado() {
-        long id = 37;
+        JwtUserDetails jwtUserDetails = new JwtUserDetails(37, Collections.singletonList(AppAuthority.MASTER));
+        dateServiceImplMock.setAgora(null);
+
         // expira em 15 minutos
-        ZonedDateTime data1 = ZonedDateTime.of(2020, 8, 21, 14, 45, 0, 0, ZoneOffset.UTC);
-        ZonedDateTime data2 = ZonedDateTime.of(2020, 8, 21, 15, 0, 1, 0, ZoneOffset.UTC);
+        LocalDateTime data1 = LocalDateTime.of(2020, 8, 21, 14, 45, 0, 0);
+        LocalDateTime data2 = LocalDateTime.of(2020, 8, 21, 15, 0, 1, 0);
 
-        dateServiceImplMock.zonedDateTime = data1;
-        String token = jwtService.gerarToken(id);
+        dateServiceImplMock.setAgora(data1);
+        String token = jwtService.gerarToken(jwtUserDetails);
 
-        dateServiceImplMock.zonedDateTime = data2;
-        Assertions.assertThrows(TokenExpiredException.class, () -> jwtService.lerToken(token));
+        dateServiceImplMock.setAgora(data2);
+        assertThatExceptionOfType(TokenExpiradoException.class).isThrownBy(() -> jwtService.lerToken(token));
     }
 }

@@ -4,24 +4,24 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+import java.time.ZoneId;
 
 @Service
 public class DateServiceImpl implements DateService {
 
     @Override
-    public ZonedDateTime zonedAgora() {
-        return ZonedDateTime.now();
+    public ZoneId zone() {
+        return ZoneId.systemDefault();
     }
 
     @Override
     public LocalDateTime agora() {
-        return zonedAgora().toLocalDateTime();
+        return LocalDateTime.now(zone());
     }
 
     @Override
     public LocalDate hoje() {
-        return zonedAgora().toLocalDate();
+        return LocalDate.now(zone());
     }
 
 }

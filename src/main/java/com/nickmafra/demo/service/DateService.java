@@ -2,10 +2,10 @@ package com.nickmafra.demo.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+import java.time.ZoneId;
 
 public interface DateService {
-    ZonedDateTime zonedAgora();
+    ZoneId zone();
 
     LocalDateTime agora();
 

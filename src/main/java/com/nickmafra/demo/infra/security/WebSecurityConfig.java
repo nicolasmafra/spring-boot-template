@@ -1,15 +1,19 @@
 package com.nickmafra.demo.infra.security;
 
+import com.nickmafra.demo.service.JwtService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -27,22 +31,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             new AntPathRequestMatcher("/api/public/**")
     };
 
+    @Autowired
+    private JwtService jwtService;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-            .authorizeRequests()
+        http.csrf().disable();
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.authorizeRequests()
                 .antMatchers("/actuator/**").permitAll()
                 .antMatchers(SWAGGER_PATTERNS).permitAll()
                 .requestMatchers(PUBLIC_REQ_MATCHERS).permitAll()
                 .antMatchers("/api/**").authenticated()
-                .anyRequest().denyAll()
-                .and()
-            .addFilterBefore(new TokenAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .anyRequest().denyAll();
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtService, "/api/**"), UsernamePasswordAuthenticationFilter.class);
     }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(new TokenAuthenticationProvider());
-    }
-
 }
