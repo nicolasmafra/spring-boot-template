@@ -25,7 +25,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Filtro que verifica se possui token de autenticação e, se houver, adiciona um objeto AuthenticationToken no contexto.
+ * Filtro que executa todos os passos de uma autenticação por JWT:
+ * <br>
+ * <ul>- Verifica se possui token de autenticação JWT na requisição e se houver converte para um objeto JwtAuthentication.</ul>
+ * <ul>- Valida autenticação do tipo JwtAuthentication, se houver.</ul>
+ * <ul>- Manipula sucesso ou insucesso de autenticação.</ul>
+ * <br>
+ * Obs.: Esta classe não se preocupa com o fluxo em si, pois este é delegado à classe AuthenticationFilter;
  */
 @Slf4j
 public class JwtAuthenticationFilter implements Filter, AuthenticationConverter, AuthenticationManager,
