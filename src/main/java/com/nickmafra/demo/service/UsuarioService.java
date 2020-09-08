@@ -1,5 +1,8 @@
 package com.nickmafra.demo.service;
 
+import com.nickmafra.demo.dto.ConsultaDto;
+import com.nickmafra.demo.dto.PaginaDto;
+import com.nickmafra.demo.dto.UsuarioDto;
 import com.nickmafra.demo.dto.request.UsuarioCreateRequest;
 import com.nickmafra.demo.dto.request.UsuarioUpdateRequest;
 import com.nickmafra.demo.infra.exception.BadRequestException;
@@ -25,9 +28,19 @@ public class UsuarioService {
         return repository.findAll(pageable);
     }
 
+    public PaginaDto<UsuarioDto> listarDto(ConsultaDto consultaDto) {
+        Pageable pageable = consultaDto.toPageable();
+        Page<Usuario> pageUsuarios = listar(pageable);
+        return new PaginaDto<>(pageUsuarios).map(UsuarioDto::new);
+    }
+
     public Usuario encontrar(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new BadRequestException(BadRequestException.MSG_ID_NAO_ENCONTRADO));
+    }
+
+    public UsuarioDto encontrarDto(Long id) {
+        return new UsuarioDto(encontrar(id));
     }
 
     public void validarUsuarioNovo(UsuarioCreateRequest request) {
@@ -40,19 +53,27 @@ public class UsuarioService {
         // nada por enquanto
     }
 
-    public Long criar(UsuarioCreateRequest request) {
+    public Usuario criar(UsuarioCreateRequest request) {
         validarUsuarioNovo(request);
         Usuario usuario = request.atualizarCampos(new Usuario());
         usuario.setHashSenha(criptoService.ofuscarSenha(usuario.getSenha()));
         usuario.setSenha(null); // por segurança
-        return repository.save(usuario).getId();
+        return repository.save(usuario);
     }
 
-    public void atualizar(Long id, UsuarioUpdateRequest request) {
+    public UsuarioDto criarDto(UsuarioCreateRequest request) {
+        return new UsuarioDto(criar(request));
+    }
+
+    public Usuario atualizar(Long id, UsuarioUpdateRequest request) {
         Usuario usuario = encontrar(id);
         validarUsuarioExistente(usuario, request);
         request.atualizarCampos(usuario);
-        repository.save(usuario);
+        return repository.save(usuario);
+    }
+
+    public UsuarioDto atualizarDto(Long id, UsuarioUpdateRequest request) {
+        return new UsuarioDto(atualizar(id, request));
     }
 
     public Optional<Usuario> buscarPorLoginSenha(String login, String senha) {
