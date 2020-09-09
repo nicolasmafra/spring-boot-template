@@ -1,7 +1,7 @@
 package com.nickmafra.demo.service;
 
-import com.nickmafra.demo.dto.ConsultaDto;
 import com.nickmafra.demo.dto.PaginaDto;
+import com.nickmafra.demo.dto.UsuarioConsultaDto;
 import com.nickmafra.demo.dto.UsuarioDto;
 import com.nickmafra.demo.dto.request.UsuarioCreateRequest;
 import com.nickmafra.demo.dto.request.UsuarioUpdateRequest;
@@ -11,7 +11,6 @@ import com.nickmafra.demo.model.Usuario;
 import com.nickmafra.demo.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,13 +23,12 @@ public class UsuarioService {
     @Autowired
     private CriptoService criptoService;
 
-    public Page<Usuario> listar(Pageable pageable) {
-        return repository.findAll(pageable);
+    public Page<Usuario> listar(UsuarioConsultaDto consultaDto) {
+        return repository.findAll(consultaDto.toSpec(), consultaDto.toPageable());
     }
 
-    public PaginaDto<UsuarioDto> listarDto(ConsultaDto consultaDto) {
-        Pageable pageable = consultaDto.toPageable();
-        Page<Usuario> pageUsuarios = listar(pageable);
+    public PaginaDto<UsuarioDto> listarDto(UsuarioConsultaDto consultaDto) {
+        Page<Usuario> pageUsuarios = listar(consultaDto);
         return new PaginaDto<>(pageUsuarios).map(UsuarioDto::new);
     }
 

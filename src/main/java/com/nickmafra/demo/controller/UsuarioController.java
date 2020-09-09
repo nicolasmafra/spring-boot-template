@@ -1,7 +1,7 @@
 package com.nickmafra.demo.controller;
 
-import com.nickmafra.demo.dto.ConsultaDto;
 import com.nickmafra.demo.dto.PaginaDto;
+import com.nickmafra.demo.dto.UsuarioConsultaDto;
 import com.nickmafra.demo.dto.UsuarioDto;
 import com.nickmafra.demo.dto.request.UsuarioCreateRequest;
 import com.nickmafra.demo.dto.request.UsuarioUpdateRequest;
@@ -19,7 +19,7 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public PaginaDto<UsuarioDto> getAll(ConsultaDto consultaDto) {
+    public PaginaDto<UsuarioDto> getFiltered(UsuarioConsultaDto consultaDto) {
         return usuarioService.listarDto(consultaDto);
     }
 
