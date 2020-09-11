@@ -23,6 +23,11 @@ public class ConsultaDto {
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
     private Sort.Direction direcao;
 
+    public void setToFullResult() {
+        pagina = FIRST_PAGE;
+        tamanho = DEFAULT_PAGE_SIZE;
+    }
+
     public Sort toSort() {
         List<Sort.Order> orders = new ArrayList<>();
         if (!StringUtils.isEmpty(ordenacao) && !ordenacao.equalsIgnoreCase(DEFAULT_ORDER_PROPERTY)) {
