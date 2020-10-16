@@ -11,6 +11,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.nickmafra.demo.infra.exception.AppAuthenticationException;
 import com.nickmafra.demo.infra.exception.TokenExpiradoException;
 import com.nickmafra.demo.infra.exception.TokenInvalidoException;
+import com.nickmafra.demo.infra.properties.JwtProperties;
 import com.nickmafra.demo.infra.security.AppAuthority;
 import com.nickmafra.demo.infra.security.JwtAuthentication;
 import com.nickmafra.demo.infra.security.JwtUserDetails;
@@ -21,9 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Service
@@ -31,9 +30,8 @@ public class JwtService {
 
     private static final String AUTHORITIES_CLAIM_NAME = "aut";
 
-    private String issuer = "spring-boot-template"; // TODO parametrizar
-    private Duration duration = Duration.of(15, ChronoUnit.MINUTES); // TODO parametrizar
-
+    @Autowired
+    private JwtProperties properties;
     @Autowired
     private X509Service x509Service;
     @Autowired
@@ -45,7 +43,7 @@ public class JwtService {
     @PostConstruct
     private void init() {
         algorithm = createAlgorithm(x509Service.getPublicKey(), x509Service.getPrivateKey());
-        verifier = createVerifier(algorithm, () -> toDate(dateService.agora()), issuer);
+        verifier = createVerifier(algorithm, () -> toDate(dateService.agora()), properties.getIssuer());
     }
 
     private static Algorithm createAlgorithm(RSAPublicKey publicKey, RSAPrivateKey privateKey) {
@@ -69,10 +67,10 @@ public class JwtService {
 
     public String gerarToken(JwtUserDetails jwtUserDetails) {
         LocalDateTime agora = dateService.agora();
-        LocalDateTime dataExp = agora.plus(duration);
+        LocalDateTime dataExp = agora.plus(properties.getDuration());
 
         return JWT.create()
-                .withIssuer(issuer)
+                .withIssuer(properties.getIssuer())
                 .withSubject(String.valueOf(jwtUserDetails.getIdUsuario()))
                 .withIssuedAt(toDate(agora))
                 .withExpiresAt(toDate(dataExp))
@@ -125,7 +123,7 @@ public class JwtService {
     }
 
     private void validarDataEmissao(LocalDateTime dataEmissao) throws TokenExpiradoException {
-        LocalDateTime dataExpiracaoCalculada = dataEmissao.plus(duration);
+        LocalDateTime dataExpiracaoCalculada = dataEmissao.plus(properties.getDuration());
         if (dataExpiracaoCalculada.isBefore(dateService.agora()))
             throw new TokenExpiradoException();
     }

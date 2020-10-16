@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "nickmafra.metadata")
-public class MetadataConfigProperties {
+public class MetadataProperties {
 
     private String nomeAutor;
 

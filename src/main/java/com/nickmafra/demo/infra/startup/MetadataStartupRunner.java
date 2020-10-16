@@ -1,6 +1,6 @@
 package com.nickmafra.demo.infra.startup;
 
-import com.nickmafra.demo.infra.properties.MetadataConfigProperties;
+import com.nickmafra.demo.infra.properties.MetadataProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -13,12 +13,12 @@ import org.springframework.util.StringUtils;
 public class MetadataStartupRunner implements ApplicationRunner {
 
     @Autowired
-    private MetadataConfigProperties metadataConfigProperties;
+    private MetadataProperties metadataProperties;
 
     @Override
     public void run(ApplicationArguments args) {
-        if (!StringUtils.isEmpty(metadataConfigProperties.getNomeAutor())) {
-            log.info("Criado por: {}", metadataConfigProperties.getNomeAutor());
+        if (!StringUtils.isEmpty(metadataProperties.getNomeAutor())) {
+            log.info("Criado por: {}", metadataProperties.getNomeAutor());
         }
     }
 }
