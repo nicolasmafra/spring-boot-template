@@ -18,7 +18,7 @@ import static com.nickmafra.demo.infra.security.JwtAuthenticationFilter.AUTH_PRE
 @RestController
 @RequestMapping
 @Slf4j
-public class LoginController { // TODO transformar em filter
+public class LoginController {
 
     @Autowired
     private UsuarioService usuarioService;

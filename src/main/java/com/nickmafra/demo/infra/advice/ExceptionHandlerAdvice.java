@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.text.MessageFormat;
 import java.util.stream.Collectors;
 
+/**
+ * Manipula exceptions lançadas por RestControllers.
+ */
 @Slf4j
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {

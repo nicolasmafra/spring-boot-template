@@ -1,7 +1,6 @@
 package com.nickmafra.demo.model;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +9,6 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@NoArgsConstructor
 public class Mensagem {
 
     @GeneratedValue
