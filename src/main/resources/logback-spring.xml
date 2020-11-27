@@ -1,0 +1,9 @@
+<configuration>
+
+    <!-- override spring base variables -->
+    <springProperty name="CONSOLE_LOG_PATTERN" source="nickmafra.logging.pattern" />
+    <springProperty name="FILE_LOG_PATTERN" source="nickmafra.logging.pattern" />
+
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+</configuration>
