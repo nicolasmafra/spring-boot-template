@@ -34,7 +34,7 @@ public class PaginaDto<T> {
         this.totalElementos = pagina.totalElementos;
     }
 
-    private PaginaDto(int tamanhoPagina, int numeroPagina, List<T> conteudo, int totalElementos) {
+    public PaginaDto(int tamanhoPagina, int numeroPagina, List<T> conteudo, int totalElementos) {
         this.conteudo = conteudo;
         this.numeroPagina = numeroPagina;
         this.tamanhoPagina = conteudo.size();
