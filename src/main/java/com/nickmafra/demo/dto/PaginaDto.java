@@ -34,6 +34,14 @@ public class PaginaDto<T> {
         this.totalElementos = pagina.totalElementos;
     }
 
+    private PaginaDto(int tamanhoPagina, int numeroPagina, List<T> conteudo, int totalElementos) {
+        this.conteudo = conteudo;
+        this.numeroPagina = numeroPagina;
+        this.tamanhoPagina = conteudo.size();
+        this.totalPaginas = totalElementos / tamanhoPagina;
+        this.totalElementos = totalElementos;
+    }
+
     public <T2> PaginaDto<T2> map(Function<T, T2> converter) {
         return new PaginaDto<>(this, converter);
     }
