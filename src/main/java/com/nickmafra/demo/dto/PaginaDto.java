@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 @Getter
 public class PaginaDto<T> {
 
+    public static final int FIRST_PAGE = 0;
+
     private List<T> conteudo;
     private int numeroPagina;
     private int tamanhoPagina;
@@ -20,7 +22,7 @@ public class PaginaDto<T> {
 
     public PaginaDto(Page<T> page) {
         this.conteudo = page.getContent();
-        this.numeroPagina = page.getNumber();
+        this.numeroPagina = page.getNumber() - FIRST_PAGE;
         this.tamanhoPagina = page.getSize();
         this.totalPaginas = page.getTotalPages();
         this.totalElementos = page.getTotalElements();

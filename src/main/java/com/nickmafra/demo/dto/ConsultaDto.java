@@ -38,7 +38,7 @@ public class ConsultaDto {
     }
 
     public Pageable toPageable(Sort sort) {
-        return PageRequest.of(pagina, tamanho, sort);
+        return PageRequest.of(pagina - FIRST_PAGE, tamanho, sort);
     }
 
     public Pageable toPageable() {
