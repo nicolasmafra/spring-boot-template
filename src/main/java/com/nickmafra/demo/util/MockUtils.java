@@ -22,8 +22,8 @@ public class MockUtils {
     }
 
     public static <T> PaginaDto<T> criarPagina(ConsultaDto consultaDto, int totalElementos, IntFunction<T> supplier) {
-        int pagina = Math.max(consultaDto.getPagina(), 0);
-        consultaDto.setPagina(pagina);
+        consultaDto.setPagina(Math.max(consultaDto.getPagina(), ConsultaDto.FIRST_PAGE));
+        int pagina = consultaDto.getPagina() - ConsultaDto.FIRST_PAGE;
         int tamanhoMaximo = consultaDto.getTamanho();
         int offset = pagina * tamanhoMaximo;
         int offsetEnd = Math.min(offset + tamanhoMaximo, totalElementos); // end exclusivo
