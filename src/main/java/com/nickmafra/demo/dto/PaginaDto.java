@@ -22,7 +22,7 @@ public class PaginaDto<T> {
 
     public PaginaDto(Page<T> page) {
         this.conteudo = page.getContent();
-        this.numeroPagina = page.getNumber() - FIRST_PAGE;
+        this.numeroPagina = page.getNumber() + FIRST_PAGE;
         this.tamanhoPagina = page.getSize();
         this.totalPaginas = page.getTotalPages();
         this.totalElementos = page.getTotalElements();
