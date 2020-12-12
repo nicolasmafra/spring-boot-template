@@ -32,3 +32,8 @@ A autenticação utilizada é via Bearer token JWT, onde após realizado o login
 - Em seguida use seu usuário para realizar login na rota `/login`. Na resposta haverá um bearer token, copie-o (com a palavra Bearer também!).
 - Para que seu navegador use o token em toda requisição, clique em Authorize (lá em cima à direita, tem um botão com cadeado verde) e cole o token.
 - Teste a autenticação executando uma requisição GET na rota `/api/usuarios`. Se tudo der certo, serão listados os usuários cadastrados.
+
+## Banco de dados
+
+Por ser um projeto template, o projeto usa o banco H2. Este banco funciona tanto no teste de compilação, com dados em memória,
+quanto ao executar localmente, com dados na pasta `db/data`. Para limpar o banco de dados, basta excluir esta pasta.
