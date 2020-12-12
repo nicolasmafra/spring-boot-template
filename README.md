@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/nickmafra/spring-boot-template.svg?branch=master)](https://travis-ci.com/nickmafra/spring-boot-template)
+[![Build Status](https://travis-ci.com/nickmafra/spring-boot-template.svg?branch=develop)](https://travis-ci.com/nickmafra/spring-boot-template)
 # spring-boot-template
 
 Projeto modelo usando Spring Boot
@@ -6,6 +6,8 @@ Projeto modelo usando Spring Boot
 O objetivo deste projeto é aplicar o máximo de conhecimento em uma aplicação spring boot, com boas práticas e funcionalidades.
 Assim, caso seja preciso relembrar de alguma funcionalidade, basta verificar neste projeto.
 Este repositório também pode ser utilizado com template para outros repositórios.
+
+O sistema está disponível online para testes: https://nickmafra-template.herokuapp.com/swagger-ui.html
 
 
 ## Executando o sistema
@@ -45,5 +47,5 @@ Por ser um projeto template, o projeto usa o banco H2. Este banco funciona tanto
 quanto ao executar localmente, com dados na pasta `db/data`. Para limpar o banco de dados, basta excluir esta pasta.
 
 Caso deseje ver os dados do banco de dados, deixe o sistema no ar e acesse a URL https://localhost:8080/h2-console.
-Os dados de acesso de encontram no arquivo `config/application-local.properties`, são as propriedade iniciadas com `spring.datasource`.
+Os dados de acesso de encontram no arquivo `config/application-local.properties`, são as propriedades iniciadas com `spring.datasource`.
 
