@@ -17,6 +17,8 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<swagger.vesion>2.9.2</swagger.vesion>
+		<jpamodelgen.version>5.4.21.Final</jpamodelgen.version>
+		<props-to-constants-generator.version>1.0.0</props-to-constants-generator.version>
 	</properties>
 
 	<dependencies>
@@ -45,11 +47,18 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+		<!-- geradores de código -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-jpamodelgen</artifactId>
-			<version>5.4.21.Final</version>
+			<version>${jpamodelgen.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.kklisura.java.processing</groupId>
+			<artifactId>props-to-constants-generator</artifactId>
+			<version>${props-to-constants-generator.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>

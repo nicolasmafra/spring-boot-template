@@ -1,5 +1,6 @@
 package com.nickmafra.demo.validation;
 
+import com.nickmafra.demo.Messages_;
 import com.nickmafra.demo.validation.annotation.SenhaForte;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,12 +17,12 @@ public class SenhaForteValidator implements ConstraintValidator<SenhaForte, Stri
     @RequiredArgsConstructor
     @AllArgsConstructor
     public enum ItemValidacao {
-        TAMANHO8(".{8,}", "{senha.forte.regras.tamanho8}"),
-        MAIUSCULA(".*[A-Z].*", "{senha.forte.regras.maiuscula}"),
-        MINUSCULA(".*[a-z].*", "{senha.forte.regras.minuscula}"),
-        DIGITO(".*[0-9].*", "{senha.forte.regras.digito}"),
-        CHAR_ESPECIAL(".*[^A-Za-z0-9].*", "{senha.forte.regras.char-especial}"),
-        NAO_BRANCOS("[^\\s]*", "{senha.forte.regras.nao.branco}");
+        TAMANHO8(".{8,}", "{" + Messages_.SENHA_FORTE_REGRAS_TAMANHO8 + "}"),
+        MAIUSCULA(".*[A-Z].*", "{" + Messages_.SENHA_FORTE_REGRAS_MAIUSCULA + "}"),
+        MINUSCULA(".*[a-z].*", "{" + Messages_.SENHA_FORTE_REGRAS_MINUSCULA + "}"),
+        DIGITO(".*[0-9].*", "{" + Messages_.SENHA_FORTE_REGRAS_DIGITO + "}"),
+        CHAR_ESPECIAL(".*[^A-Za-z0-9].*", "{" + Messages_.SENHA_FORTE_REGRAS_CHAR_ESPECIAL + "}"),
+        NAO_BRANCOS("[^\\s]*", "{" + Messages_.SENHA_FORTE_REGRAS_NAO_BRANCO + "}");
 
         String regex;
         String mensagem;
@@ -39,7 +40,7 @@ public class SenhaForteValidator implements ConstraintValidator<SenhaForte, Stri
         if (textoItens.isEmpty()) {
             return true;
         }
-        String mensagem = "{senha.forte.regras}: " + textoItens + ".";
+        String mensagem = "{" + Messages_.SENHA_FORTE_REGRAS + "}: " + textoItens + ".";
         context.disableDefaultConstraintViolation();
         context.buildConstraintViolationWithTemplate(mensagem).addConstraintViolation();
         return false;

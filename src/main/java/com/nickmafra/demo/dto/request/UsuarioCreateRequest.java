@@ -1,5 +1,6 @@
 package com.nickmafra.demo.dto.request;
 
+import com.nickmafra.demo.Messages_;
 import com.nickmafra.demo.model.Usuario;
 import com.nickmafra.demo.validation.annotation.SenhaForte;
 import lombok.Data;
@@ -14,9 +15,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class UsuarioCreateRequest extends UsuarioUpdateRequest {
 
-    @NotBlank(message = "{not-blank.login}")
+    @NotBlank(message = "{" + Messages_.NOT_BLANK_LOGIN + "}")
     private String login;
-    @NotNull(message = "{not-null.senha}")
+    @NotNull(message = "{" + Messages_.NOT_NULL_SENHA + "}")
     @SenhaForte
     private String senha;
 

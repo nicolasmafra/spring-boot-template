@@ -1,9 +1,9 @@
 package com.nickmafra.demo.service;
 
 import com.nickmafra.demo.infra.exception.AppRuntimeException;
+import com.nickmafra.demo.infra.properties.SslProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
@@ -26,19 +26,16 @@ public class X509Service {
     private static final String ENCRYPTATION_ALG = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
     private static final Charset ENCRYPTATION_CHARSET = StandardCharsets.UTF_8;
 
-    @Value("${server.ssl.key-store}")
-    private String keyStorePath;
-    @Value("${server.ssl.key-store-alias:1}")
-    private String keyAlias;
-    @Value("${server.ssl.key-store-password}")
-    private String keyStorePassword;
+    @Autowired
+    private SslProperties properties;
 
     @Autowired
     private ResourceLoader resourceLoader;
 
     private InputStream loadCertificate() throws IOException {
-        String location = keyStorePath.startsWith("classpath:") || keyStorePath.startsWith ("file:")
-                ? keyStorePath : ("file:" + keyStorePath);
+        String path = properties.getKeyStore();
+        String location = path.startsWith("classpath:") || path.startsWith ("file:")
+                ? path : ("file:" + path);
         log.debug("Carregando arquivo no caminho=" + location);
         return resourceLoader.getResource(location).getInputStream();
     }
@@ -51,7 +48,7 @@ public class X509Service {
             throw new AppRuntimeException(e);
         }
         try {
-            keyStore.load(loadCertificate(), keyStorePassword.toCharArray());
+            keyStore.load(loadCertificate(), properties.getKeyStorePassword().toCharArray());
         } catch (NoSuchAlgorithmException e) {
             throw new AppRuntimeException(e);
         } catch (IOException | CertificateException e) {
@@ -62,7 +59,9 @@ public class X509Service {
 
     public RSAPrivateKey getPrivateKey() {
         try {
-            RSAPrivateKey key = (RSAPrivateKey) getKeyStore().getKey(keyAlias, keyStorePassword.toCharArray());
+            RSAPrivateKey key = (RSAPrivateKey) getKeyStore().getKey(
+                    properties.getKeyStoreAlias(),
+                    properties.getKeyStorePassword().toCharArray());
             Objects.requireNonNull(key);
             return key;
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | NullPointerException e) {
@@ -72,7 +71,7 @@ public class X509Service {
 
     public RSAPublicKey getPublicKey() {
         try {
-            return (RSAPublicKey) getKeyStore().getCertificate(keyAlias).getPublicKey();
+            return (RSAPublicKey) getKeyStore().getCertificate(properties.getKeyStoreAlias()).getPublicKey();
         } catch (KeyStoreException e) {
             throw new AppRuntimeException("Erro ao carregar chave pública", e);
         }

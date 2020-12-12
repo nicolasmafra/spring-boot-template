@@ -1,5 +1,6 @@
 package com.nickmafra.demo.dto.request;
 
+import com.nickmafra.demo.Messages_;
 import com.nickmafra.demo.model.Usuario;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,10 +13,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class UsuarioUpdateRequest {
 
-    @NotBlank(message = "{not-blank.nome}")
+    @NotBlank(message = "{" + Messages_.NOT_BLANK_NOME + "}")
     private String nome;
     private String sobrenome;
-    @Past(message = "{past.data-nascimento}")
+    @Past(message = "{" + Messages_.PAST_DATA_NASCIMENTO + "}")
     private LocalDate dataNascimento;
 
     public Usuario atualizarCampos(Usuario usuario) {

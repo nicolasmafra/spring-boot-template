@@ -1,5 +1,6 @@
 package com.nickmafra.demo.tasks;
 
+import com.nickmafra.demo.ApplicationProperties_;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class HelloTask {
 
-    @Scheduled(fixedDelayString = "${nickmafra.tasks.helloTask.fixedDelay}")
+    @Scheduled(fixedDelayString = "${" + ApplicationProperties_.NICKMAFRA_TASKS_HELLOTASK_FIXEDDELAY + "}")
     public void execute() {
         log.info("Hello!");
     }
