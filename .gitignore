@@ -32,3 +32,4 @@ build/
 
 ### Project specific ###
 /log/
+/db/data/
