@@ -10,8 +10,10 @@ Este repositório também pode ser utilizado com template para outros repositór
 
 ## Executando o sistema
 
-Após compilar com o maven, execute o jar com o perfil spring `local`:
-  `-Dspring.profiles.active=local`
+Após compilar com o maven, execute o jar com o perfil spring `local` (a partir da pasta raiz do projeto):
+```
+java -jar -Dspring.profiles.active=local ./target/spring-boot-template-0.0.1-SNAPSHOT.jar
+```
 
 ## Usando o sistema
 
