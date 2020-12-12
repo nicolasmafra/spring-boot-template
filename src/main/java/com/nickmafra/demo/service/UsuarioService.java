@@ -1,20 +1,26 @@
 package com.nickmafra.demo.service;
 
+import com.nickmafra.demo.dto.LoginDto;
 import com.nickmafra.demo.dto.PaginaDto;
 import com.nickmafra.demo.dto.UsuarioConsultaDto;
 import com.nickmafra.demo.dto.UsuarioDto;
 import com.nickmafra.demo.dto.request.UsuarioCreateRequest;
 import com.nickmafra.demo.dto.request.UsuarioUpdateRequest;
+import com.nickmafra.demo.infra.exception.AppAuthenticationException;
 import com.nickmafra.demo.infra.exception.BadRequestException;
 import com.nickmafra.demo.infra.exception.JaCadastradoException;
 import com.nickmafra.demo.model.Usuario;
 import com.nickmafra.demo.repository.UsuarioRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static com.nickmafra.demo.infra.security.JwtAuthenticationFilter.AUTH_PREFIX;
+
+@Slf4j
 @Service
 public class UsuarioService {
 
@@ -22,6 +28,8 @@ public class UsuarioService {
     private UsuarioRepository repository;
     @Autowired
     private CriptoService criptoService;
+    @Autowired
+    private JwtService jwtService;
 
     public Page<Usuario> listar(UsuarioConsultaDto consultaDto) {
         return repository.findAll(consultaDto.toSpec(), consultaDto.toPageable());
@@ -77,5 +85,15 @@ public class UsuarioService {
     public Optional<Usuario> buscarPorLoginSenha(String login, String senha) {
         return repository.findByLogin(login)
                 .filter(usuario -> criptoService.conferirSenhaOfuscada(senha, usuario.getHashSenha()));
+    }
+
+    public String realizarLogin(LoginDto loginDto) {
+        return buscarPorLoginSenha(loginDto.getLogin(), loginDto.getSenha())
+                .map(usuario -> {
+
+                    log.info("Usuário {} realizou login.", loginDto.getLogin());
+                    return AUTH_PREFIX + jwtService.gerarToken(usuario);
+
+                }).orElseThrow(() -> new AppAuthenticationException("Usuário ou senha inválidos."));
     }
 }
