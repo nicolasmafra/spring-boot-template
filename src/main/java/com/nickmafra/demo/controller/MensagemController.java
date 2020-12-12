@@ -1,6 +1,7 @@
 package com.nickmafra.demo.controller;
 
 import com.nickmafra.demo.dto.ConsultaDto;
+import com.nickmafra.demo.dto.MensagemConsultaDto;
 import com.nickmafra.demo.dto.MensagemDto;
 import com.nickmafra.demo.dto.PaginaDto;
 import com.nickmafra.demo.model.Mensagem;
@@ -53,8 +54,9 @@ public class MensagemController {
     }
 
     @GetMapping("/mock")
-    public PaginaDto<MensagemDto> getAllMock(ConsultaDto consultaDto) {
+    public PaginaDto<MensagemDto> getAllMock(MensagemConsultaDto consultaDto) {
         List<MensagemDto> itens = MockUtils.gerarItens(30, this::mensagemMockada);
+        itens = MockUtils.filtrar(consultaDto.toPredicate(), itens);
         itens = MockUtils.ordenar(consultaDto, itens);
         return MockUtils.pegarPagina(consultaDto, itens);
     }

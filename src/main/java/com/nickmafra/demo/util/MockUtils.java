@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.IntFunction;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class MockUtils {
@@ -46,6 +47,10 @@ public class MockUtils {
                 throw new MockUtilsException(e);
             }
         };
+    }
+
+    public static <T> List<T> filtrar(Predicate<T> predicate, List<T> itens) {
+        return predicate == null ? itens : itens.stream().filter(predicate).collect(Collectors.toList());
     }
 
     public static <T> List<T> ordenar(ConsultaDto consultaDto, List<T> itens) {
