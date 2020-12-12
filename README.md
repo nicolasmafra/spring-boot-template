@@ -21,6 +21,7 @@ O sistema estará disponível localmente na porta 8080, com HTTPS, através do S
   https://localhost:8080/swagger-ui.html
 
 >Nota: como é usado certificado HTTPS auto gerado, o navegador diz que não é seguro no primeiro acesso. Basta avançar a tela.
+
 >Nota: a maioria das rotas são privadas, exigindo autenticação. As rotas da saudacao-controller são públicas.
 
 ## Autenticando
