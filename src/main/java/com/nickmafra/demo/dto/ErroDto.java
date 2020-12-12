@@ -1,6 +1,7 @@
 package com.nickmafra.demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.nickmafra.demo.infra.exception.AppAuthenticationException;
 import com.nickmafra.demo.infra.exception.AppRuntimeException;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ public class ErroDto {
 
     public ErroDto(Exception e) {
         this.exception = e;
-        if (e instanceof AppRuntimeException) {
+        if (e instanceof AppRuntimeException || e instanceof AppAuthenticationException) {
             this.mensagem = e.getMessage();
             if (e.getCause() != null) {
                 this.detalhes = e.getCause().getMessage();
