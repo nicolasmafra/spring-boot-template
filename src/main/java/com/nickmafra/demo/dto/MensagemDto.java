@@ -2,6 +2,8 @@ package com.nickmafra.demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nickmafra.demo.model.Mensagem;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,8 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MensagemDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
