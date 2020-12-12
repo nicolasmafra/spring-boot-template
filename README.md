@@ -22,7 +22,7 @@ O sistema estará disponível localmente na porta 8080, com HTTPS, através do S
 
 >Nota: como é usado certificado HTTPS auto gerado, o navegador diz que não é seguro no primeiro acesso. Basta avançar a tela.
 
->Nota: a maioria das rotas são privadas, exigindo autenticação. As rotas da saudacao-controller são públicas.
+>Nota: a maioria das rotas exigem autenticação, outras exigem que seja administrador. A rota da saudacao-controller é pública, caso não queira se autenticar.
 
 ## Autenticando
 
@@ -31,7 +31,13 @@ A autenticação utilizada é via Bearer token JWT, onde após realizado o login
 - Use a rota POST `/api/usuarios` (dentro do usuario-controller) para cadastrar um usuário. Confira na resposta se houve sucesso.
 - Em seguida use seu usuário para realizar login na rota `/login`. Na resposta haverá um bearer token, copie-o (com a palavra Bearer também!).
 - Para que seu navegador use o token em toda requisição, clique em Authorize (lá em cima à direita, tem um botão com cadeado verde) e cole o token.
-- Teste a autenticação executando uma requisição GET na rota `/api/usuarios`. Se tudo der certo, serão listados os usuários cadastrados.
+- Teste a autenticação executando uma requisição GET na rota `/api/usuarios/{id}` passando o id do seu usuário. Se tudo der certo, seus dados serão exibidos.
+
+## Usuário admin
+
+O sistema, ao ser iniciado, cadastra automaticamente o usuário admin se não houver no banco de dados. O login é sempre `admin`, a senha está no arquivo `application-local.properties`.
+
+O usuário admin é o único que possui permissão de visualizar ou alterar outros usuários. Usuários comuns (não admin) só conseguem visualizar ou alterar seu próprio usuário.
 
 ## Banco de dados
 
