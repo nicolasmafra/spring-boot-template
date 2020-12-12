@@ -4,9 +4,7 @@ import com.nickmafra.demo.model.Usuario;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -14,33 +12,29 @@ import java.util.stream.Stream;
 public class JwtUserDetails {
 
     private final long idUsuario;
-    private final Collection<Papel> papeis; // futuramente um usuário poderá possuir mais de um papel
+    private final Set<Papel> papeis; // futuramente um usuário poderá possuir mais de um papel
 
     /** Contém os papéis e também as operações de cada papel */
-    private final Collection<GrantedAuthority> authorities;
+    private final Set<GrantedAuthority> authorities;
 
     public JwtUserDetails(long idUsuario, Collection<Papel> papeis) {
         this.idUsuario = idUsuario;
-        this.papeis = Collections.unmodifiableCollection(papeis);
-        this.authorities = criarAuthorities();
+        this.papeis = Collections.unmodifiableSet(new HashSet<>(papeis));
+        this.authorities = criarAuthorities(papeis);
     }
 
     public JwtUserDetails(Usuario usuario) {
-        this.idUsuario = usuario.getId();
-        this.papeis = Collections.singletonList(usuario.getPapel());
-        this.authorities = criarAuthorities();
+        this(usuario.getId(), usuario.getPapel());
     }
 
     public JwtUserDetails(long idUsuario, Papel... papeis) {
-        this.idUsuario = idUsuario;
-        this.papeis = Collections.unmodifiableCollection(Arrays.asList(papeis));
-        this.authorities = criarAuthorities();
+        this(idUsuario, Arrays.asList(papeis));
     }
 
-    private Collection<GrantedAuthority> criarAuthorities() {
+    private static Set<GrantedAuthority> criarAuthorities(Collection<Papel> papeis) {
         return Stream.concat(
                 papeis.stream(),
                 papeis.stream().map(Papel::getOperacoes).flatMap(Collection::stream))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 }

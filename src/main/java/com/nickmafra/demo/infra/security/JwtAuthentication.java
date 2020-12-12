@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class JwtAuthentication extends PreAuthenticatedAuthenticationToken {
 
     @Getter
