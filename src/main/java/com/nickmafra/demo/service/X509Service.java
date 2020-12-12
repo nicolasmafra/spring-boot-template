@@ -1,7 +1,7 @@
 package com.nickmafra.demo.service;
 
 import com.nickmafra.demo.infra.exception.AppRuntimeException;
-import com.nickmafra.demo.infra.properties.SslProperties;
+import com.nickmafra.demo.infra.properties.RsaProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
@@ -27,7 +27,7 @@ public class X509Service {
     private static final Charset ENCRYPTATION_CHARSET = StandardCharsets.UTF_8;
 
     @Autowired
-    private SslProperties properties;
+    private RsaProperties properties;
 
     @Autowired
     private ResourceLoader resourceLoader;

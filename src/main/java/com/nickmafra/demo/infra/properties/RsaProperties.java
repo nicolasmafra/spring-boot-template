@@ -6,8 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "server.ssl")
-public class SslProperties {
+@ConfigurationProperties(prefix = "nickmafra.rsa")
+public class RsaProperties {
 
     private String keyStore;
     private String keyStoreAlias = "1";
