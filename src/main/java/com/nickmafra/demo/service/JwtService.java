@@ -12,9 +12,9 @@ import com.nickmafra.demo.infra.exception.AppAuthenticationException;
 import com.nickmafra.demo.infra.exception.TokenExpiradoException;
 import com.nickmafra.demo.infra.exception.TokenInvalidoException;
 import com.nickmafra.demo.infra.properties.JwtProperties;
-import com.nickmafra.demo.infra.security.AppAuthority;
 import com.nickmafra.demo.infra.security.JwtAuthentication;
 import com.nickmafra.demo.infra.security.JwtUserDetails;
+import com.nickmafra.demo.infra.security.Papel;
 import com.nickmafra.demo.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,12 +23,13 @@ import javax.annotation.PostConstruct;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Date;
 
 @Service
 public class JwtService {
 
-    private static final String AUTHORITIES_CLAIM_NAME = "aut";
+    private static final String ROLES_CLAIM_NAME = "roles";
 
     @Autowired
     private JwtProperties properties;
@@ -74,7 +75,7 @@ public class JwtService {
                 .withSubject(String.valueOf(jwtUserDetails.getIdUsuario()))
                 .withIssuedAt(toDate(agora))
                 .withExpiresAt(toDate(dataExp))
-                .withArrayClaim(AUTHORITIES_CLAIM_NAME, AppAuthority.toStringArray(jwtUserDetails.getAuthorities()))
+                .withArrayClaim(ROLES_CLAIM_NAME, Papel.toStringArray(jwtUserDetails.getPapeis()))
                 .sign(algorithm);
     }
 
@@ -106,14 +107,12 @@ public class JwtService {
             // necessário caso a duration tenha sido diminuída e o token seja antigo
             validarDataEmissao(toLocalDateTime(decodedJWT.getIssuedAt()));
 
-            JwtUserDetails jwtUserDetails = new JwtUserDetails();
+            long idUsuario = Long.parseLong(decodedJWT.getSubject());
 
-            jwtUserDetails.setIdUsuario(Long.parseLong(decodedJWT.getSubject()));
+            String[] roles = decodedJWT.getClaim(ROLES_CLAIM_NAME).asArray(String.class);
+            Collection<Papel> papeis = Papel.fromStringArray(roles);
 
-            String[] strAuthorities = decodedJWT.getClaim(AUTHORITIES_CLAIM_NAME).asArray(String.class);
-            jwtUserDetails.setAuthorities(AppAuthority.fromStringArray(strAuthorities));
-
-            return jwtUserDetails;
+            return new JwtUserDetails(idUsuario, papeis);
 
         } catch (TokenExpiredException e) {
             throw new TokenExpiradoException(e);

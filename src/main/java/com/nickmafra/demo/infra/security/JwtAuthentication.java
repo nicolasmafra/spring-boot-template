@@ -1,9 +1,15 @@
 package com.nickmafra.demo.infra.security;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
+@EqualsAndHashCode(callSuper = true)
 public class JwtAuthentication extends PreAuthenticatedAuthenticationToken {
+
+    @Getter
+    private Long id;
 
     public JwtAuthentication(DecodedJWT decodedJWT) {
         super(decodedJWT.getSubject(), decodedJWT);
@@ -12,6 +18,7 @@ public class JwtAuthentication extends PreAuthenticatedAuthenticationToken {
     public JwtAuthentication(DecodedJWT decodedJWT, JwtUserDetails jwtUserDetails) {
         super(decodedJWT.getSubject(), decodedJWT, jwtUserDetails.getAuthorities());
         setDetails(jwtUserDetails);
+        id = jwtUserDetails.getIdUsuario();
     }
 
     @Override

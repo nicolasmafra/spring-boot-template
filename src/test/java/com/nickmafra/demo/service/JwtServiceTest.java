@@ -2,8 +2,8 @@ package com.nickmafra.demo.service;
 
 import com.nickmafra.demo.infra.exception.TokenExpiradoException;
 import com.nickmafra.demo.infra.exception.TokenInvalidoException;
-import com.nickmafra.demo.infra.security.AppAuthority;
 import com.nickmafra.demo.infra.security.JwtUserDetails;
+import com.nickmafra.demo.infra.security.Papel;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -28,7 +27,7 @@ class JwtServiceTest {
 
     @Test
     void gerarLerToken() throws TokenInvalidoException, TokenExpiradoException {
-        JwtUserDetails jwtUserDetails = new JwtUserDetails(31, Collections.singletonList(AppAuthority.MASTER));
+        JwtUserDetails jwtUserDetails = new JwtUserDetails(31, Papel.ADMIN);
         dateServiceImplMock.setAgora(null);
 
         String token = jwtService.gerarToken(jwtUserDetails);
@@ -40,7 +39,7 @@ class JwtServiceTest {
 
     @Test
     void naoExpirado() throws TokenInvalidoException, TokenExpiradoException {
-        JwtUserDetails jwtUserDetails = new JwtUserDetails(37, Collections.singletonList(AppAuthority.MASTER));
+        JwtUserDetails jwtUserDetails = new JwtUserDetails(37, Papel.ADMIN);
 
         // expira em 15 minutos
         LocalDateTime data1 = LocalDateTime.of(2020, 8, 21, 14, 45, 0, 0);
@@ -57,7 +56,7 @@ class JwtServiceTest {
 
     @Test
     void expirado() {
-        JwtUserDetails jwtUserDetails = new JwtUserDetails(37, Collections.singletonList(AppAuthority.MASTER));
+        JwtUserDetails jwtUserDetails = new JwtUserDetails(37, Papel.ADMIN);
         dateServiceImplMock.setAgora(null);
 
         // expira em 15 minutos
