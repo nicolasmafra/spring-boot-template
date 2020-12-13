@@ -9,6 +9,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "nickmafra.metadata")
 public class MetadataProperties {
 
+    private String nomeApi;
+    private String versaoApi;
     private String nomeAutor;
+    private String gitUrl;
 
 }

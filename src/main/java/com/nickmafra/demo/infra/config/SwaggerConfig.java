@@ -1,13 +1,15 @@
 package com.nickmafra.demo.infra.config;
 
+import com.nickmafra.demo.Messages_;
+import com.nickmafra.demo.infra.properties.MetadataProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.AntPathMatcher;
 import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.SecurityReference;
-import springfox.documentation.service.SecurityScheme;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -16,6 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 @Configuration
 @EnableSwagger2
@@ -26,12 +29,30 @@ public class SwaggerConfig {
     private static final List<String> PATTERNS = Arrays.asList("/api/**", "/login");
 
     @Bean
-    public Docket postsApi() {
+    public Docket api(
+            @Autowired(required = false) BuildProperties buildProperties,
+            MetadataProperties metadataProperties,
+            MessageSource messageSource) {
+
+        String buildDescription = buildProperties != null ? (makeBuildDescription(buildProperties)) : "";
+        String description = messageSource.getMessage(Messages_.METADATA_PROJECTDESCRIPTION, new Object[] { metadataProperties.getGitUrl() }, Locale.getDefault())
+                + buildDescription;
+
+        ApiInfo apiInfo = new ApiInfo(metadataProperties.getNomeApi(), description, metadataProperties.getVersaoApi(),
+                null, null, null, null, Collections.emptySet()
+        );
         return new Docket(DocumentationType.SWAGGER_2)
-                .securityContexts(Collections.singletonList(securityContext()))
+                .apiInfo(apiInfo)
                 .securitySchemes(securitySchemes())
+                .securityContexts(Collections.singletonList(securityContext()))
                 .select().paths(this::pathMatches)
                 .build();
+    }
+
+    private String makeBuildDescription(BuildProperties buildProperties) {
+        return "\n\nInformações do projeto:"
+                + "\nVersão: " + buildProperties.getVersion()
+                + "\nData da compilação: " + buildProperties.getTime();
     }
 
     private boolean pathMatches(String path) {

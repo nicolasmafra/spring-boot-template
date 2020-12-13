@@ -11,8 +11,10 @@
 	<groupId>com.nickmafra.demo</groupId>
 	<artifactId>spring-boot-template</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+
 	<name>spring-boot-template</name>
 	<description>Projeto template usando Spring Boot</description>
+	<url>https://github.com/nickmafra/spring-boot-template</url>
 
 	<properties>
 		<java.version>1.8</java.version>
