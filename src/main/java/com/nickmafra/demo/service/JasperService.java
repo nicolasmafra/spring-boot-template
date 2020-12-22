@@ -1,15 +1,14 @@
 package com.nickmafra.demo.service;
 
+import com.nickmafra.demo.enums.FormatoRelatorio;
 import com.nickmafra.demo.infra.exception.AppRuntimeException;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.export.SimpleExporterInput;
-import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
-import net.sf.jasperreports.export.SimplePdfReportConfiguration;
+import net.sf.jasperreports.export.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -17,9 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -54,14 +51,14 @@ public class JasperService {
         }
     }
 
-    private JasperPrint loadAndFill(String jasperName, Collection<?> dados) {
+    public JasperPrint loadAndFill(String jasperName, Collection<?> dados) {
         return fill(load(jasperName), new HashMap<>(), dados);
     }
 
-    private void exportToPdf(JasperPrint jasperPrint, OutputStream out) {
+    public void exportToPdf(List<JasperPrint> jasperPrints, OutputStream out) {
         JRPdfExporter exporter = new JRPdfExporter();
 
-        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+        exporter.setExporterInput(SimpleExporterInput.getInstance(jasperPrints));
         exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(out));
 
         SimplePdfReportConfiguration reportConfig = new SimplePdfReportConfiguration();
@@ -80,7 +77,35 @@ public class JasperService {
         }
     }
 
-    public void exportToPdf(String jasperName, Collection<?> dados, OutputStream out) {
-        exportToPdf(loadAndFill(jasperName, dados), out);
+    public void exportToXlsx(List<JasperPrint> jasperPrints, OutputStream out) {
+        JRXlsxExporter exporter = new JRXlsxExporter();
+        exporter.setExporterInput(SimpleExporterInput.getInstance(jasperPrints));
+        exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(out));
+
+        SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
+        configuration.setWhitePageBackground(false);
+        configuration.setShowGridLines(true);
+        configuration.setOnePagePerSheet(false);
+        configuration.setDetectCellType(true);
+        configuration.setCollapseRowSpan(false);
+        configuration.setRemoveEmptySpaceBetweenRows(true);
+        exporter.setConfiguration(configuration);
+        try {
+
+            exporter.exportReport();
+
+        } catch (JRException e) {
+            throw new AppRuntimeException("Erro ao gerar XLSX.", e);
+        }
+    }
+
+    public void export(String jasperName, Collection<?> dados, FormatoRelatorio formatoRelatorio, OutputStream out) {
+        List<JasperPrint> jasperPrints = Collections.singletonList(loadAndFill(jasperName, dados));
+
+        if (formatoRelatorio == FormatoRelatorio.PDF) {
+            exportToPdf(jasperPrints, out);
+        } else if (formatoRelatorio == FormatoRelatorio.XLSX) {
+            exportToXlsx(jasperPrints, out);
+        }
     }
 }

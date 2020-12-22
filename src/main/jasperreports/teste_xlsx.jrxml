@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="Relatório de usuários" orientation="Landscape" pageWidth="1540" pageHeight="595" leftMargin="0" rightMargin="0">
+
+    <field name="id" class="java.lang.Long"/>
+    <field name="nome"/>
+    <field name="sobrenome"/>
+    <field name="login"/>
+
+    <columnHeader>
+        <band height="20" splitType="Stretch">
+            <frame>
+                <reportElement mode="Opaque" x="0" y="0" width="1540" height="20" backcolor="#82aee0" />
+
+                <staticText>
+                    <reportElement x="0" y="0" width="20" height="20"/>
+                    <text>ID</text>
+                </staticText>
+                <staticText>
+                    <reportElement x="20" y="0" width="156" height="20"/>
+                    <text>Nome</text>
+                </staticText>
+                <staticText>
+                    <reportElement x="176" y="0" width="156" height="20"/>
+                    <text>Sobrenome</text>
+                </staticText>
+
+            </frame>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="20" splitType="Stretch">
+            <frame>
+                <reportElement x="0" y="0" width="1540" height="20"/>
+
+                <textField>
+                    <reportElement x="0" y="0" width="20" height="20"/>
+                    <textFieldExpression class="java.lang.Long"><![CDATA[$F{id}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="20" y="0" width="156" height="20"/>
+                    <textFieldExpression class="java.lang.String"><![CDATA[$F{nome}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="176" y="0" width="156" height="20"/>
+                    <textFieldExpression class="java.lang.String"><![CDATA[$F{sobrenome}]]></textFieldExpression>
+                </textField>
+
+            </frame>
+        </band>
+    </detail>
+</jasperReport>

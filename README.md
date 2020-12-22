@@ -49,3 +49,8 @@ quanto ao executar localmente, com dados na pasta `db/data`. Para limpar o banco
 Caso deseje ver os dados do banco de dados, deixe o sistema no ar e acesse a URL https://localhost:8080/h2-console.
 Os dados de acesso de encontram no arquivo `config/application-local.properties`, são as propriedades iniciadas com `spring.datasource`.
 
+
+# Detalhes de desenvolvimento
+
+## Compilação de relatórios
+Para compilar os relatórios manualmente, execute `mvn com.alexnederlof:jasperreports-plugin:2.7:jasper`
