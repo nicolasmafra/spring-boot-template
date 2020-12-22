@@ -25,7 +25,7 @@ public class ConsultaDto {
 
     public void setToFullResult() {
         pagina = FIRST_PAGE;
-        tamanho = DEFAULT_PAGE_SIZE;
+        tamanho = Integer.MAX_VALUE;
     }
 
     public Sort toSort() {
