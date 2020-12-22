@@ -1,6 +1,6 @@
 package com.nickmafra.demo.service;
 
-import com.nickmafra.demo.dto.ArquivoDto;
+import com.nickmafra.demo.dto.DownloadArquivo;
 import com.nickmafra.demo.dto.UsuarioConsultaDto;
 import com.nickmafra.demo.dto.UsuarioDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +17,17 @@ public class RelatorioService {
     @Autowired
     private UsuarioService usuarioService;
 
-    public ArquivoDto gerarRelatorioUsuarios(String nomeLike) {
+    public void gerarRelatorioUsuarios(DownloadArquivo downloadArquivo, String nomeLike) {
         UsuarioConsultaDto consulta = new UsuarioConsultaDto();
         consulta.setToFullResult();
         consulta.setNome(nomeLike);
 
         List<UsuarioDto> dados = usuarioService.listarDto(consulta).getConteudo();
-        byte[] conteudo = jasperService.exportToPdf("teste", dados);
 
-        return new ArquivoDto(conteudo, "RelatorioTeste.pdf");
+        downloadArquivo.setFileName("RelatorioTeste.pdf");
+        downloadArquivo.setHeaders();
+        jasperService.exportToPdf("teste", dados, downloadArquivo.getOut());
+
     }
 
 }

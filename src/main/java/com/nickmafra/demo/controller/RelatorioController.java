@@ -1,13 +1,14 @@
 package com.nickmafra.demo.controller;
 
-import com.nickmafra.demo.dto.ArquivoDto;
+import com.nickmafra.demo.dto.DownloadArquivo;
 import com.nickmafra.demo.service.RelatorioService;
-import com.nickmafra.demo.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/relatorios")
@@ -17,9 +18,9 @@ public class RelatorioController {
     private RelatorioService relatorioService;
 
     @GetMapping("/usuarios")
-    public ResponseEntity<byte[]> getUsuarios(String nomeLike) {
-        ArquivoDto arquivo = relatorioService.gerarRelatorioUsuarios(nomeLike);
-        return ControllerUtils.toResponse(arquivo);
+    public void getUsuarios(String nomeLike, HttpServletResponse response) throws IOException {
+        DownloadArquivo downloadArquivo = new DownloadArquivo(response);
+        relatorioService.gerarRelatorioUsuarios(downloadArquivo, nomeLike);
     }
 
 }

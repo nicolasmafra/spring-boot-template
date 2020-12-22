@@ -14,9 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,8 +58,7 @@ public class JasperService {
         return fill(load(jasperName), new HashMap<>(), dados);
     }
 
-    private byte[] exportToPdf(JasperPrint jasperPrint) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+    private void exportToPdf(JasperPrint jasperPrint, OutputStream out) {
         JRPdfExporter exporter = new JRPdfExporter();
 
         exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
@@ -79,11 +78,9 @@ public class JasperService {
         } catch (JRException e) {
             throw new AppRuntimeException("Erro ao gerar PDF.", e);
         }
-
-        return out.toByteArray();
     }
 
-    public byte[] exportToPdf(String jasperName, Collection<?> dados) {
-        return exportToPdf(loadAndFill(jasperName, dados));
+    public void exportToPdf(String jasperName, Collection<?> dados, OutputStream out) {
+        exportToPdf(loadAndFill(jasperName, dados), out);
     }
 }
