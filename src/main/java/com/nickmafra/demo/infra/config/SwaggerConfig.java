@@ -18,7 +18,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 @Configuration
 @EnableSwagger2
@@ -35,7 +34,7 @@ public class SwaggerConfig {
             MessageSource messageSource) {
 
         String buildDescription = buildProperties != null ? (makeBuildDescription(buildProperties)) : "";
-        String description = messageSource.getMessage(Messages_.METADATA_PROJECTDESCRIPTION, new Object[] { metadataProperties.getGitUrl() }, Locale.getDefault())
+        String description = messageSource.getMessage(Messages_.METADATA_PROJECTDESCRIPTION, new Object[] { metadataProperties.getGitUrl() }, MessageConfig.DEFAULT_LOCALE)
                 + buildDescription;
 
         ApiInfo apiInfo = new ApiInfo(metadataProperties.getNomeApi(), description, metadataProperties.getVersaoApi(),
