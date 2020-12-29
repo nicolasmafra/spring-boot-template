@@ -2,8 +2,6 @@ package com.nickmafra.demo.infra.exception;
 
 public class AppRuntimeException extends RuntimeException {
 
-    public static final String MSG_ERRO_INTERNO = "Houve um erro interno.";
-
     public AppRuntimeException() {
     }
 

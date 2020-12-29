@@ -1,15 +1,16 @@
 package com.nickmafra.demo.service;
 
+import com.nickmafra.demo.Messages_;
 import com.nickmafra.demo.dto.LoginDto;
 import com.nickmafra.demo.dto.PaginaDto;
 import com.nickmafra.demo.dto.UsuarioConsultaDto;
 import com.nickmafra.demo.dto.UsuarioDto;
 import com.nickmafra.demo.dto.request.UsuarioCreateRequest;
 import com.nickmafra.demo.dto.request.UsuarioUpdateRequest;
-import com.nickmafra.demo.infra.exception.AppAuthenticationException;
 import com.nickmafra.demo.infra.exception.AppRuntimeException;
 import com.nickmafra.demo.infra.exception.BadRequestException;
 import com.nickmafra.demo.infra.exception.JaCadastradoException;
+import com.nickmafra.demo.infra.exception.NaoEncontradoException;
 import com.nickmafra.demo.infra.security.Papel;
 import com.nickmafra.demo.model.Usuario;
 import com.nickmafra.demo.repository.UsuarioRepository;
@@ -49,8 +50,7 @@ public class UsuarioService {
     }
 
     public Usuario encontrar(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new BadRequestException(BadRequestException.MSG_ID_NAO_ENCONTRADO));
+        return repository.findById(id).orElseThrow(() -> new NaoEncontradoException(Messages_.ERRO_GENERICO_ID_NAO_ENCONTRADO));
     }
 
     public UsuarioDto encontrarDto(Long id) {
@@ -59,7 +59,7 @@ public class UsuarioService {
 
     public void validarUsuarioNovo(UsuarioCreateRequest request) {
         if (repository.existsByLogin(request.getLogin())) {
-            throw new JaCadastradoException("Login já cadastrado.");
+            throw new JaCadastradoException(Messages_.ERRO_LOGIN_JA_CADASTRADO);
         }
     }
 
@@ -119,6 +119,6 @@ public class UsuarioService {
                     log.info("Usuário {} realizou login.", loginDto.getLogin());
                     return AUTH_PREFIX + jwtService.gerarToken(usuario);
 
-                }).orElseThrow(() -> new AppAuthenticationException("Usuário ou senha inválidos."));
+                }).orElseThrow(() -> new BadRequestException(Messages_.ERRO_LOGIN_INVALIDO));
     }
 }

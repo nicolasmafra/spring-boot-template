@@ -1,29 +1,36 @@
 package com.nickmafra.demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.nickmafra.demo.infra.exception.AppAuthenticationException;
-import com.nickmafra.demo.infra.exception.AppRuntimeException;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class ErroDto {
     private String mensagem;
     private String detalhes;
     @JsonIgnore
-    private Exception exception;
+    private Throwable throwable;
 
-    public ErroDto(Exception e) {
-        this.exception = e;
-        if (e instanceof AppRuntimeException || e instanceof AppAuthenticationException) {
-            this.mensagem = e.getMessage();
-            if (e.getCause() != null) {
-                this.detalhes = e.getCause().getMessage();
+    public static ErroDto criar(Object... args) {
+        ErroDto dto = new ErroDto();
+        for (Object arg : args) {
+            if (arg instanceof Throwable) {
+                Throwable t = (Throwable) arg;
+                if (dto.getThrowable() != null) {
+                    dto.setThrowable(t);
+                }
+                arg = t.getMessage();
             }
-        } else {
-            this.mensagem = AppRuntimeException.MSG_ERRO_INTERNO;
-            this.detalhes = e.getMessage();
+            if (arg != null) {
+                if (dto.getMensagem() == null)
+                    dto.setMensagem(arg.toString());
+                else if (dto.getDetalhes() == null)
+                    dto.setDetalhes(arg.toString());
+            }
         }
+        return dto;
     }
 }

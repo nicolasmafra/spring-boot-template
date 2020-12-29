@@ -34,7 +34,7 @@ public class SwaggerConfig {
             MessageSource messageSource) {
 
         String buildDescription = buildProperties != null ? (makeBuildDescription(buildProperties)) : "";
-        String description = messageSource.getMessage(Messages_.METADATA_PROJECTDESCRIPTION, new Object[] { metadataProperties.getGitUrl() }, MessageConfig.DEFAULT_LOCALE)
+        String description = messageSource.getMessage(Messages_.METADATA_PROJECT_DESCRIPTION, new Object[] { metadataProperties.getGitUrl() }, MessageConfig.DEFAULT_LOCALE)
                 + buildDescription;
 
         ApiInfo apiInfo = new ApiInfo(metadataProperties.getNomeApi(), description, metadataProperties.getVersaoApi(),
